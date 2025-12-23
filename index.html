@@ -314,6 +314,9 @@
                 </div>
 
                 <div class="flex flex-col gap-3">
+                    <div id="auto-upload-msg" class="text-sm text-green-600 font-bold hidden mb-2">
+                        <i class="fa-solid fa-check"></i> 成績已自動上傳至龍虎榜
+                    </div>
                     <!-- Manual upload button as backup -->
                     <button onclick="app.saveToLeaderboard(false)" class="cartoon-btn bg-brand-yellow w-full py-3 rounded-xl font-bold hover:bg-yellow-300">
                         <i class="fa-solid fa-trophy mr-2"></i>上傳分數至龍虎榜
@@ -350,9 +353,12 @@
 
         <!-- === LEADERBOARD VIEW === -->
         <div id="leaderboard-view" class="hidden-page">
-            <div class="text-center mb-8">
+            <div class="text-center mb-8 relative">
                 <h2 class="text-3xl font-bold cartoon-font bg-brand-yellow inline-block px-6 py-2 border-4 border-black rotate-[-2deg] shadow-cartoon">BAFS 龍虎榜</h2>
                 <p class="mt-4 text-gray-500">Top 50 Legends</p>
+                <button onclick="app.loadLeaderboard()" class="absolute right-0 top-2 text-sm bg-white border border-gray-300 px-3 py-1 rounded shadow hover:bg-gray-50">
+                    <i class="fa-solid fa-rotate"></i> 刷新
+                </button>
             </div>
 
             <div class="cartoon-card overflow-hidden bg-white dark:bg-gray-800">
@@ -403,7 +409,7 @@
                     </div>
                     <div class="text-left">
                         <div class="font-bold text-lg">模擬考模式</div>
-                        <div class="text-xs text-gray-500">75分鐘倒數 • 最後對卷 • 真實體驗</div>
+                        <div class="text-xs text-gray-500">30分鐘倒數 • 最後對卷 • 真實體驗</div>
                     </div>
                 </button>
             </div>
@@ -426,7 +432,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // === 1. 靜態題庫資料庫 (2024 年 完整30題 + 2023 年 30題) ===
+        // === 1. 靜態題庫資料庫 (2024 + 2023) ===
         const REAL_QUESTIONS = [
             // 2024 Questions
             { id: 202401, year: "2024", topic: "Business Environment", question: "下列哪項是商界對香港經濟的貢獻？\n(1) 銷售貨品與服務至海外以賺取外匯\n(2) 為本地居民提供就業機會\n(3) 為政府帶來稅收", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 3, explanation: "商業活動能促進出口賺取外匯、創造就業職位以及增加政府利得稅收入，三者皆正確。" },
@@ -459,6 +465,7 @@
             { id: 202428, year: "2024", topic: "Business Environment", question: "下列哪項有關企業家的陳述是正確的？\n(1) 樂於接受創新意念\n(2) 願意承擔風險\n(3) 以獨資方式經營商號", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 0, explanation: "企業家精神包括創新(1)和承擔風險(2)，不限於獨資(3)。" },
             { id: 202429, year: "2024", topic: "Personal Finance", question: "2024 年 1 月 1 日存入 $200,000，年利率 5%，每半年複息計算。18 個月後收到的總金額為：", options: ["$215,000", "$215,250", "$215,378", "$231,525"], answer: 2, explanation: "3個半年期。本利和 = 200,000 * (1.025)^3 = $215,378。" },
             { id: 202430, year: "2024", topic: "Accounting", question: "下列哪項是虛帳戶？\n(1) 購貨折扣帳\n(2) 租金帳\n(3) 銷貨運費帳", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 3, explanation: "虛帳戶是指收益(1)和費用(2)(3)帳戶。" },
+
             // 2023 Questions
             { id: 202301, year: "2023", topic: "Business Environment", question: "下列哪項有關香港營商環境的陳述是正確的？\n(1) 香港天然資源豐富，可以自給自足。\n(2) 香港大多數進口的貨物來自內地。\n(3) 香港政府沒有對貨物徵收銷售稅。", options: ["只有 (1)", "只有 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)"], answer: 3, explanation: "香港缺乏天然資源(1錯)；內地是香港主要進口來源地(2對)；香港奉行簡單稅制，沒有徵收銷售稅(3對)。" },
             { id: 202302, year: "2023", topic: "Management", question: "下列哪項有關職權和責任的陳述是正確的？\n(1) 授權是把職權和責任交予下屬。\n(2) 前線管理人員需要職權來執行他們的責任。\n(3) 控制幅度較闊的管理人員擁有較多職權。", options: ["只有 (1)", "只有 (1) 及 (2)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 1, explanation: "控制幅度是指管理者直接管轄下屬的人數，幅度闊窄與職權多寡無直接必然關係(3錯)。" },
@@ -887,10 +894,17 @@
                     this.fireConfetti();
                 }
 
-                // 自動上傳分數 (Auto Upload)
-                if (user) {
-                    this.saveToLeaderboard(false);
-                }
+                // 讓畫面先渲染再執行 prompt
+                setTimeout(() => {
+                    if (user) {
+                        this.saveToLeaderboard(false);
+                    } else {
+                        // 嘗試補救
+                        signInAnonymously(auth).then(() => {
+                             this.saveToLeaderboard(false);
+                        });
+                    }
+                }, 500);
             }
 
             fireConfetti() {
@@ -978,6 +992,8 @@
                     return;
                 }
                 
+                this.showToast("正在處理成績...");
+
                 let nickname;
                 if (isAuto) {
                     nickname = "訪客 " + user.uid.substring(0, 5);
@@ -1054,7 +1070,11 @@
 
                 } catch (e) {
                     console.error(e);
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-500">無法載入龍虎榜</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-500">
+                        無法載入數據<br>
+                        <span class="text-xs text-gray-500">${e.message}</span><br>
+                        <span class="text-xs">請檢查 Firestore 規則是否設為 Test Mode</span>
+                    </td></tr>`;
                 }
             }
 
