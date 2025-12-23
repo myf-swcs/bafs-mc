@@ -272,7 +272,7 @@
             </div>
 
             <!-- Controls -->
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center mb-8">
                 <button id="btn-prev" onclick="app.prevQuestion()" class="cartoon-btn bg-gray-200 dark:bg-gray-700 px-6 py-3 rounded-xl disabled:opacity-50">
                     <i class="fa-solid fa-arrow-left"></i> 上一題
                 </button>
@@ -284,6 +284,16 @@
                 <button id="btn-submit" onclick="app.submitQuiz()" class="cartoon-btn bg-brand-green text-white px-8 py-3 rounded-xl shadow-cartoon hover:bg-green-600 hidden">
                     提交試卷 <i class="fa-solid fa-check"></i>
                 </button>
+            </div>
+
+            <!-- Chatbox Section (NEW) -->
+            <div class="mt-8 pt-8 border-t-4 border-dashed border-gray-300 dark:border-gray-700">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-comments text-brand-blue"></i> 同學討論區
+                </h3>
+                <div class="w-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border-2 border-black shadow-cartoon-sm">
+                    <script id="cid0020000427496639107" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 100%;height: 500px;">{"handle":"swcs-bafs","arch":"js","styles":{"a":"C8C8C8","b":100,"c":"000000","d":"000000","k":"C8C8C8","l":"C8C8C8","m":"C8C8C8","p":"10","q":"C8C8C8","r":100,"t":0,"surl":0,"allowpm":0,"fwtickm":1}}</script>
+                </div>
             </div>
         </div>
 
@@ -424,8 +434,7 @@
         <span id="toast-msg">Notification</span>
     </div>
 
-    <!-- Chatango Script -->
-    <script id="cid0020000427496639107" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 250px;height: 350px;">{"handle":"swcs-bafs","arch":"js","styles":{"a":"C8C8C8","b":100,"c":"000000","d":"000000","k":"C8C8C8","l":"C8C8C8","m":"C8C8C8","p":"9","q":"C8C8C8","r":100,"t":0,"surl":0,"allowpm":0,"fwtickm":1}}</script>
+    <!-- (Chatango Script Removed from here) -->
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
