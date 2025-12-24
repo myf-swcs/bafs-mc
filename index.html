@@ -232,32 +232,33 @@
                     <!-- JS will populate this -->
                     <div class="col-span-3 text-center py-8 text-gray-400">正在載入題庫...</div>
                 </div>
-            <!-- 同學即時聊天室 -->
-            <div class="mt-12">
-                <h3 class="text-2xl font-bold mb-4 flex items-center gap-2 justify-center">
-                    <i class="fa-solid fa-comments text-brand-blue text-3xl"></i>
-                    同學即時討論區 🔥
-                </h3>
-                <p class="text-center text-gray-600 dark:text-gray-400 mb-4">分享心得 • 問問題 • 一起衝 5**！</p>
-                
-                <div class="cartoon-card overflow-hidden bg-white dark:bg-gray-800 border-4 border-black dark:border-white shadow-cartoon mx-auto max-w-4xl h-96 md:h-screen-max">
-                    <iframe> src="//st.chatango.com/js/gz/emb.js" style="width: 100%;height: 500px;">{"handle":"swcs-bafs","arch":"js","styles":{"a":"C8C8C8","b":100,"c":"000000","d":"000000","k":"C8C8C8","l":"C8C8C8","m":"C8C8C8","p":"10","q":"C8C8C8","r":100,"t":0,"surl":0,"allowpm":0,"fwtickm":1}}</script>
- 
-                            width="100%" 
-                            height="100%" 
-                            frameborder="0" 
-                            allowfullscreen 
-                            class="rounded-b-xl">
-                    </iframe>
-                </div>
-                <p class="text-center text-sm text-gray-500 mt-3">
-                    <i class="fa-solid fa-info-circle mr-1"></i>
-                    聊天室全公開，記得保持友善哦～
-                </p>
-            </div>
+<!-- 同學即時聊天室 -->
+<div class="mt-12 cartoon-card bg-white dark:bg-gray-800 p-6 border-4 border-black dark:border-white shadow-cartoon">
+    <h3 class="text-2xl font-bold mb-4 text-center cartoon-font flex items-center justify-center gap-3">
+        <i class="fa-solid fa-comments text-brand-blue text-3xl"></i>
+        BAFS 同學討論區 🔥
+    </h3>
+    <p class="text-center text-gray-600 dark:text-gray-400 mb-6">問問題 • 分享心得 • 一起衝 5**！</p>
+    
+    <!-- 聊天室容器：強制填滿 -->
+    <div class="w-full relative overflow-hidden rounded-xl border-4 border-black dark:border-white shadow-cartoon-hover" style="height: 70vh; min-height: 500px; background: #f8f8f8 dark:#2d2d2d;">
+        <iframe
+            src="https://tlk.io/bafs?embed=1"
+            class="absolute inset-0 w-full h-full border-0"
+            frameborder="0"
+            allowfullscreen
+            loading="lazy"
+            style="transform: scale(1.04); transform-origin: top left; width: 100%; height: 104%; background: transparent;">
+        </iframe>
+    </div>
+    
+    <p class="text-center text-sm text-gray-500 mt-4">
+        <i class="fa-solid fa-heart text-brand-red mr-1"></i>
+        大家保持友善，共同進步～
+    </p>
+</div>
+</div>       
 
-            </div>
-        </div>
 
         <!-- === QUIZ VIEW === -->
         <div id="quiz-view" class="hidden-page pb-20">
