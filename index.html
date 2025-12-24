@@ -1233,48 +1233,49 @@ if (playerName && playerName !== "訪客") {
             }
 
             // Modified to support Auto-Upload
-            async saveToLeaderboard(isAuto = false) {
-                if (!user) {
-                    // Anonymous login handles this
-                    return;
-                }
-                
-                let nickname;
-                if (isAuto) {
-                    // 自動模式：直接產生暱稱，不詢問
-                    nickname = "訪客 " + user.uid.substring(0, 5);
-                    this.showToast("正在自動上傳成績...");
-                } else {
-                    nickname = prompt("請輸入你在龍虎榜上的暱稱：", "訪客 " + user.uid.substring(0, 5));
-                }
-                
-                if (!nickname) return;
+async saveToLeaderboard(isAuto = false) {
+    if (!user) {
+        // 如果未登入，強制匿名登入
+        await signInAnonymously(auth);
+    }
 
-                const acc = Math.round((this.score / this.currentQuestions.length) * 100);
+    // 直接使用我們的名字系統的 playerName
+    let nickname = playerName || "訪客";
 
-                try {
-                    const scoresRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-                    await addDoc(scoresRef, {
-                        nickname: nickname,
-                        score: this.score,
-                        accuracy: acc,
-                        year: this.selectedYear,
-                        timestamp: serverTimestamp()
-                    });
-                    
-                    if (isAuto) {
-                        document.getElementById('auto-upload-msg').classList.remove('hidden');
-                        this.showToast("✅ 成績已自動上傳至龍虎榜！");
-                    } else {
-                        this.showToast("上傳成功！");
-                        setTimeout(() => this.router('leaderboard'), 1000);
-                    }
-                } catch (e) {
-                    console.error(e);
-                    if (!isAuto) this.showToast("上傳失敗，請檢查資料庫規則。");
-                }
-            }
+    // 如果是手動上傳，可以再問一次（可選）
+    if (!isAuto) {
+        const input = prompt("請確認或修改你的龍虎榜暱稱：", nickname);
+        if (input && input.trim() !== "") {
+            nickname = input.trim();
+            // 可選：同步更新 playerName
+            playerName = nickname;
+            localStorage.setItem('bafsPlayerName', nickname);
+            document.getElementById('username-span').innerText = nickname;
+        }
+    }
 
+    const acc = Math.round((this.score / this.currentQuestions.length) * 100);
+
+    try {
+        const scoresRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+        await addDoc(scoresRef, {
+            nickname: nickname,
+            score: this.score,
+            accuracy: acc,
+            year: this.selectedYear,
+            timestamp: serverTimestamp()
+        });
+
+        document.getElementById('auto-upload-msg').classList.remove('hidden');
+        this.showToast("✅ 成績已成功上傳至龍虎榜！");
+        
+        // 自動刷新榜單
+        setTimeout(() => this.loadLeaderboard(), 1000);
+    } catch (e) {
+        console.error(e);
+        this.showToast("上傳失敗，請檢查網路");
+    }
+}
             async loadLeaderboard() {
                 const tbody = document.getElementById('leaderboard-body');
                 tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center">載入中...</td></tr>';
