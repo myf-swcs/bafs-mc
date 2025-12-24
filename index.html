@@ -180,7 +180,7 @@
             <div class="cartoon-card bg-brand-blue text-white p-6 md:p-10 text-center relative overflow-hidden">
                 <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full"></div>
                 <div class="absolute top-20 -left-10 w-20 h-20 bg-brand-yellow/30 rounded-full"></div>
-                <h2 class="text-3xl md:text-5xl font-bold mb-4 cartoon-font drop-shadow-[3px_3px_0_rgba(0,0,0,1)]">文sir小教室<h2>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 cartoon-font drop-shadow-[3px_3px_0_rgba(0,0,0,1)]">BAFS 5** 生成器</h2>
                 <p class="text-lg md:text-xl font-medium mb-6">歷屆試題 • 即時詳解 • 錯題重溫 • 龍虎榜</p>
                 <div class="flex flex-wrap justify-center gap-4">
                     <button onclick="app.startRandomMock()" class="cartoon-btn bg-brand-yellow text-black px-6 py-3 rounded-xl text-lg hover:bg-yellow-300">
@@ -251,11 +251,19 @@
 
             <!-- Question Card -->
             <div class="cartoon-card p-6 md:p-8 mb-6 relative bg-white dark:bg-gray-800">
-                <div class="absolute -top-3 -left-3 bg-brand-yellow border-2 border-black px-3 py-1 font-bold rounded-lg shadow-sm">
-                    Q<span id="q-number">1</span>
+                <!-- Top Badges Row -->
+                <div class="flex justify-between items-start mb-4">
+                    <!-- Progress Badge -->
+                    <div class="bg-brand-yellow border-2 border-black px-3 py-1 font-bold rounded-lg shadow-sm">
+                        Q<span id="q-number">1</span>
+                    </div>
+                    <!-- Source Year Badge (NEW) -->
+                    <div class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full border border-gray-400">
+                        <i class="fa-solid fa-tag mr-1"></i><span id="q-source">2024 Q1</span>
+                    </div>
                 </div>
                 
-                <div class="mt-4 mb-6 text-lg md:text-xl font-medium leading-relaxed question-text" id="q-text">
+                <div class="mt-2 mb-6 text-lg md:text-xl font-medium leading-relaxed question-text" id="q-text">
                     Loading question...
                 </div>
 
@@ -272,7 +280,7 @@
             </div>
 
             <!-- Controls -->
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center mb-8">
                 <button id="btn-prev" onclick="app.prevQuestion()" class="cartoon-btn bg-gray-200 dark:bg-gray-700 px-6 py-3 rounded-xl disabled:opacity-50">
                     <i class="fa-solid fa-arrow-left"></i> 上一題
                 </button>
@@ -284,6 +292,16 @@
                 <button id="btn-submit" onclick="app.submitQuiz()" class="cartoon-btn bg-brand-green text-white px-8 py-3 rounded-xl shadow-cartoon hover:bg-green-600 hidden">
                     提交試卷 <i class="fa-solid fa-check"></i>
                 </button>
+            </div>
+
+            <!-- Chatbox Section -->
+            <div class="mt-8 pt-8 border-t-4 border-dashed border-gray-300 dark:border-gray-700">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-comments text-brand-blue"></i> 同學討論區
+                </h3>
+                <div class="w-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border-2 border-black shadow-cartoon-sm">
+                    <script id="cid0020000427496639107" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 100%;height: 500px;">{"handle":"swcs-bafs","arch":"js","styles":{"a":"C8C8C8","b":100,"c":"000000","d":"000000","k":"C8C8C8","l":"C8C8C8","m":"C8C8C8","p":"10","q":"C8C8C8","r":100,"t":0,"surl":0,"allowpm":0,"fwtickm":1}}</script>
+                </div>
             </div>
         </div>
 
@@ -424,18 +442,16 @@
         <span id="toast-msg">Notification</span>
     </div>
 
-    <!-- Chatango Script -->
-    <script id="cid0020000427496639107" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 250px;height: 350px;">{"handle":"swcs-bafs","arch":"js","styles":{"a":"C8C8C8","b":100,"c":"000000","d":"000000","k":"C8C8C8","l":"C8C8C8","m":"C8C8C8","p":"9","q":"C8C8C8","r":100,"t":0,"surl":0,"allowpm":0,"fwtickm":1}}</script>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // === 1. 靜態題庫資料庫 (2024 + 2023 + 2022) ===
+        // === 1. 靜態題庫資料庫 (2024 + 2023 + 2022 + 2021) ===
         const REAL_QUESTIONS = [
             // 2024 Questions
             { id: 202401, year: "2024", topic: "Business Environment", question: "下列哪項是商界對香港經濟的貢獻？\n(1) 銷售貨品與服務至海外以賺取外匯\n(2) 為本地居民提供就業機會\n(3) 為政府帶來稅收", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 3, explanation: "商業活動能促進出口賺取外匯、創造就業職位以及增加政府利得稅收入，三者皆正確。" },
+            // ... (2024 other questions - kept from previous)
             { id: 202402, year: "2024", topic: "Management", question: "與採用扁平式架構及規模相若的商號比較，下列哪項有關採用高架式架構的商號的陳述是正確的？\n(1) 中層管理人員較多。\n(2) 它能較迅速回應市場轉變。\n(3) 管理人員監督較少直屬下屬。", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 1, explanation: "高架式架構(Tall Structure)層級多，中層管理人員較多(1正確)；管理幅度窄，監督較少下屬(3正確)。但因層級多，訊息傳遞慢，回應市場轉變較慢(2錯誤)。" },
             { id: 202403, year: "2024", topic: "Accounting", question: "下列哪項是財務報表的用途？\n(1) 用作評稅\n(2) 用作分析商號的財務資訊\n(3) 用作比較行業中不同商號的財務表現", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 3, explanation: "財務報表可用於稅務局評稅、管理層分析業績以及投資者比較不同公司的表現，三者皆是主要用途。" },
             { id: 202404, year: "2024", topic: "Personal Finance", question: "下列哪項是自僱人士在強制性公積金（強積金）制度下享有的權利？", options: ["如他們的每月有關入息低於 $7,100，可以選擇退出強積金計劃。", "他們可每年從強積金計劃提取部分累算權益。", "他們可更改其強積金帳戶的投資組合。", "他們可選擇每季作一次強積金供款。"], answer: 2, explanation: "自僱人士和僱員一樣，有權選擇和更改其強積金帳戶的投資組合。" },
@@ -527,7 +543,39 @@
             { id: 202227, year: "2022", topic: "Business Environment", question: "下列哪項有關強制性公積金（強積金）制度的陳述是正確的？", options: ["僱員、自僱人士和僱主均可選擇在強制性供款以外，作出額外的自願性供款。", "僱員如於 60 歲前退休，可即時提取強積金。", "兼職員工可豁免參加強積金計劃。", "月入 $40,000 的僱員每月須供款 $2,000。"], answer: 0, "explanation": "提取年齡一般為 65 歲 (B錯)。兼職除非受僱少於 60 日等豁免條件否則須參加 (C錯)。月入 $40,000 供款上限為 $1,500 (D錯)。" },
             { id: 202228, year: "2022", topic: "Business Environment", question: "下列哪項有關《更緊密經貿關係的安排》(CEPA) 的描述是正確的？", options: ["香港與內地互認所有專業資格。", "所有內地企業均可申請在香港聯合交易所主板上市。", "香港企業如將總部遷移至內地，可向內地政府申請免息貸款。", "所有香港原產的貨物進口內地時，均可享有零關稅優惠。"], answer: 3, "explanation": "專業資格互認僅限部分 (A錯)。上市須符合規定非所有均可 (B錯)。零關稅是 CEPA 貨物貿易的主要優惠 (D對)。" },
             { id: 202229, year: "2022", topic: "Accounting", question: "截至 2021 年 12 月 31 日止年度的淨利是多少？（根據給定試算表資料及期末存貨 $14,000）", options: ["$28,100", "$33,100", "$39,100", "$30,600"], answer: 1, "explanation": "（註：題目資料中缺失具體試算表數據，此答案根據 2022 年試卷官方答案鍵 B 判定，數值為 $33,100。）" },
-            { id: 202230, year: "2022", topic: "Accounting", question: "正確排列試算表內的帳戶結餘後，(Y) 的數值為：", options: ["$14,800", "$30,400", "$35,400", "$121,400"], answer: 1, "explanation": "（註：題目資料中缺失具體試算表數據，此答案根據 2022 年試卷官方答案鍵 B 判定，數值為 $30,400。）" }
+            { id: 202230, year: "2022", topic: "Accounting", question: "正確排列試算表內的帳戶結餘後，(Y) 的數值為：", options: ["$14,800", "$30,400", "$35,400", "$121,400"], answer: 1, "explanation": "（註：題目資料中缺失具體試算表數據，此答案根據 2022 年試卷官方答案鍵 B 判定，數值為 $30,400。）" },
+
+            // 2021 Questions
+            { id: 202101, year: "2021", topic: "Business Environment", question: "下列哪項有關世界貿易組織的陳述是正確的？\n(1) 它執行成員之間的國際貿易規則。\n(2) 它協助發展中國家增加貿易機會。\n(3) 它消除成員之間的貿易障礙。", options: ["只有 (1)", "只有 (1) 及 (2)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 1, explanation: "世貿組織負責執行貿易協定及協助發展中國家 (1, 2對)；其目標是「減少」而非完全「消除」所有障礙 (3略有保留，但在DSE常規中，消除所有障礙通常被視為過於絕對，且選項B為最佳答案)。" },
+            { id: 202102, year: "2021", topic: "Management", question: "按產品劃分部門的意思是指：", options: ["不同部門服務不同國家的顧客", "為不同市場發展不同的產品線", "工人按生產程序分工", "產品的生產、市場營銷及其他相關工作均由一位經理負責"], answer: 3, explanation: "按產品劃分部門 (Product Departmentalization) 意味著圍繞特定產品將所有相關職能（如生產、營銷）歸於同一部門管理。" },
+            { id: 202103, year: "2021", topic: "Accounting", question: "一家零售店的簿記員於年終時結平帳戶，列出帳戶結餘，並編製試算表。該簿記員執行了以下哪項會計功能？", options: ["記錄", "分類", "歸納", "溝通"], answer: 2, explanation: "編製試算表是將分類帳資料進行匯總，屬於「歸納」 (Summarizing) 階段。" },
+            { id: 202104, year: "2021", topic: "Finance", question: "文妮正考慮一項三年期的投資項目，詳情如下：第一年初流出 $70,000；第二年初流入 $25,000；第三年初流入 $35,000。該項目終結時的殘值為 20,000，貼現率為每年 5%。該項目的淨現值是多少？", options: ["-$14,445", "$187", "$2,832", "$3,520"], answer: 2, explanation: "計算現值：-$70,000 + $25,000/1.05 + $35,000/(1.05^2) + $20,000/(1.05^3) ≈ $2,832。" },
+            { id: 202105, year: "2021", topic: "Management", question: "下列哪項不是授權的好處？", options: ["提高下屬的工作滿足感", "改善上司與下屬的關係", "為下屬提供培訓機會", "讓上司專注於重要的工作"], answer: 1, explanation: "授權的主要好處包括激勵下屬 (A)、培訓 (C) 及讓上司專注策略 (D)。雖然可能有助關係，但在考試標準答案中，改善關係通常不是授權的直接或主要定義性好處。" },
+            { id: 202106, year: "2021", topic: "Accounting", question: "2021 年 2 月 1 日，李先生及成立一家售賣電腦的零售商號。同日，該商號從供應商賒購十台電腦，每台成本 $4,500。在 2 月，這商號把兩台損壞的電腦退回供應商，並售出三台電腦，每台售價 $7,000。2021 年 2 月 28 日，該商號購貨帳的結餘是多少？", options: ["$22,500", "$31,500", "$36,000", "$45,000"], answer: 3, "explanation": "購貨帳只記錄購買成本：10 台 x $4,500 = $45,000。退貨記在「購貨退出帳」，銷貨記在「銷貨帳」，不影響購貨帳餘額。" },
+            { id: 202107, year: "2021", topic: "Business Environment", question: "下列哪項是影響一家香港餐館營運的法律因素？\n(1) 最低工資水平上調。\n(2) 因 2019 冠狀病毒病擴散，公眾地方羣組聚集的人數受到限制。\n(3) 消費物價指數下降。", options: ["只有 (1)", "只有 (2)", "只有 (3)", "只有 (1) 及 (2)"], answer: 3, explanation: "最低工資 (1) 及限聚令 (2) 均屬法律/法規因素。CPI (3) 屬經濟因素。" },
+            { id: 202108, year: "2021", topic: "Management", question: "下列哪項有關有效管理原則所帶來的好處是正確的？", options: ["平衡職權和責任 —— 改善員工之間的溝通", "分工 —— 減少生產延誤", "統一命令 —— 減少工作混亂", "目標管理 —— 減少行政工作"], answer: 2, explanation: "統一命令 (Unity of Command) 確保員工只受一人指揮，能減少混亂 (C對)。目標管理通常會增加行政/文書工作 (D錯)。" },
+            { id: 202109, year: "2021", topic: "Accounting", question: "2020 年 12 月 31 日，李氏商號的帳戶結餘如下：應收帳款 $55,000；銀行透支 $2,500；存貨 $21,200；貸款予陳先生 $18,000；現金 $23,000；應付帳款 $42,300；設備 $121,000。2020 年 12 月 31 日資本帳的結餘是多少？", options: ["$157,400", "$162,400", "$193,400", "$198,400"], answer: 2, explanation: "資產 = 55,000+21,200+18,000+23,000+121,000 = $238,200。負債 = 2,500+42,300 = $44,800。資本 = 資產 - 負債 = $193,400。" },
+            { id: 202110, year: "2021", "topic": "Finance", "question": "下列哪項是銀行透支與私人貸款的分別？", options: ["利率：銀行透支較低，私人貸款較高", "還款安排：銀行透支靈活，私人貸款固定", "預先批核信貸額：銀行透支沒有，私人貸款有", "每月最低還款額：銀行透支有，私人貸款沒有"], answer: 1, explanation: "透支還款靈活 (隨時存入即可)，私人貸款通常需分期定額還款 (B對)。透支利率通常較高 (A錯)。" },
+            { id: 202111, year: "2021", "topic": "Accounting", "question": "下列哪項會減少商號的毛利？\n(1) 提用貨品 (2) 購貨運費增加 (3) 電費增加", options: ["只有 (1)", "只有 (2)", "只有 (3)", "只有 (1) 及 (2)"], answer: 1, explanation: "購貨運費 (Carriage Inwards) 增加銷貨成本，從而減少毛利 (2對)。電費只影響淨利 (3錯)。提用貨品會扣減購貨，反而避免了毛利被低估，不會減少毛利 (1錯)。" },
+            { id: 202112, year: "2021", "topic": "Business Environment", "question": "下列哪項是公營公司的特徵？\n(1) 政府參與日常營運。\n(2) 董事局主席由政府委任。\n(3) 它是獨立的法定個體。", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 2, explanation: "公營公司 (如機管局) 是獨立法定個體，主席由政府委任，但政府通常不直接參與「日常」營運 (1錯)。" },
+            { id: 202113, year: "2021", "topic": "Accounting", "question": "下列哪項有關試算表的陳述是正確的？\n(1) 如試算表平衡，帳戶結餘沒有錯誤。\n(2) 試算表顯示所有帳戶的結餘。\n(3) 如帳戶的借方總額較貸方總額少，這帳戶的結餘會顯示在試算表的貸方列。", options: ["只有 (1)", "只有 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)"], answer: 3, explanation: "平衡不代表無誤 (1錯)。試算表列出所有帳戶結餘 (2對)。借方 < 貸方 = 貸方餘額 (Credit Balance)，列在貸方列 (3對)。" },
+            { id: 202114, year: "2021", "topic": "Finance", "question": "下列哪項對個人的信貸評級有負面影響？\n(1) 有破產紀錄 (2) 曾經沒有如期償還貸款 (3) 失業超過一年", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 0, explanation: "信貸評級主要基於過往信貸紀錄 (破產、遲還款)。失業本身不直接記錄在信貸報告 (TU) 中，雖然銀行審批時會考慮，但不屬於信貸評級機構的評分項目。" },
+            { id: 202115, year: "2021", "topic": "Accounting", "question": "下列哪項有關財務狀況表的陳述是正確的？\n(1) 它顯示商號的變現能力。\n(2) 非流動資產按其總額由大至小排列。\n(3) 它顯示商號某段時間的財務狀況。", options: ["只有 (1)", "只有 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)"], answer: 0, explanation: "財務狀況表顯示某「時點」(As at) 的狀況而非某段時間 (3錯)。資產按流動性/持久性排列，非金額大小 (2錯)。透過營運資金可顯示變現能力 (1對)。" },
+            { id: 202116, year: "2021", "topic": "Business Environment", "question": "下列哪家商號在 2019 冠狀病毒病擴散下向持份者履行社會責任？\n(1) 一家室內設計公司容許僱員在家工作。\n(2) 一家餐館向堂食顧客提供折扣。\n(3) 一家出版社讓公眾經互聯網免費閱讀其書本。", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 1, explanation: "在家工作保障員工 (1)，免費閱讀回饋社會 (3)。疫情下鼓勵堂食 (2) 可能增加傳播風險，未必被視為履行社會責任的正面例子。" },
+            { id: 202117, year: "2021", "topic": "Management", "question": "一家新成立的電動車製造商設定目標如下：「我們將在下半年成為電動車市場的領導者。」這目標符合以下哪項良好目標的準則？\n(1) 具體的 (2) 具時限的 (3) 可量度的", options: ["只有 (1)", "只有 (2)", "只有 (3)", "只有 (1) 及 (2)"], answer: 1, explanation: "「下半年」具時限性 (2)。但「市場領導者」定義含糊 (市佔率？利潤？)，欠缺具體數字指標，故不夠具體 (1) 和可量度 (3)。" },
+            { id: 202118, year: "2021", "topic": "Accounting", "question": "2020 年 12 月 31 日，新輝公司決定於三個月後結束營業。同日，它的非流動資產記錄為 $3,800,000，而其清算值則為 $2,098,000。根據哪項會計概念，新輝公司於財務狀況表中的資產計值應為多少？", options: ["繼續經營假設 …… $2,098,000", "繼續經營假設 …… $3,800,000", "歷史成本概念 …… $2,098,000", "歷史成本概念 …… $3,800,000"], answer: 0, explanation: "因公司將結束，繼續經營假設 (Going Concern) 不再適用。因此，資產應以變現淨值 ($2,098,000) 入帳。這決定是基於對「繼續經營假設」狀態的評估（即因為該假設被推翻）。" },
+            { id: 202119, year: "2021", "topic": "Business Environment", "question": "企業編製道德守則的主要原因是甚麼？", options: ["法例規定", "可以降低生產成本", "可以改善公司的形象，賺取最高利潤", "為僱員提供規則和標準"], answer: 3, explanation: "道德守則的主要目的是為員工提供行為指引、規則和標準 (D)。" },
+            { id: 202120, year: "2021", "topic": "Business Environment", "question": "下列哪項有關強制性公積金（強積金）制度的陳述是正確的？\n(1) 僱員可在強制供款以外，向強積金計劃作出自願性供款。\n(2) 林先生是一名司機，現年 68 歲，月入 $10,000，他須向強積金計劃每月供款 $500。\n(3) 陳先生是一名自僱小販，去年淨收入為 $120,000，他須向強積金計劃供款 $6,000。", options: ["只有 (1)", "只有 (1) 及 (2)", "只有 (1) 及 (3)", "(2) 及 (3)"], answer: 0, explanation: "自願供款是允許的 (1對)。65 歲以上獲豁免 (2錯)。雖然 (3) 看似計算正確 (120k * 5% = 6k)，但DSE答案指出只有 (1) 正確，可能因題目細節定義（如小販豁免或「淨收入」字眼非「有關入息」）而不成立。" },
+            { id: 202121, year: "2021", "topic": "Business Environment", "question": "下列哪項有關香港中小型企業（中小企）的陳述是正確的？", options: ["中小企的規模較細，未能實行分工。", "東主承擔有限債務責任。", "大多數中小企從事次級產業。", "聘用少於 50 名員工的非製造業公司屬中小企。"], answer: 3, explanation: "這是香港政府對非製造業中小企的定義 (D對)。中小企多為第三級產業 (C錯)，且多為無限公司 (B錯)。" },
+            { id: 202122, year: "2021", "topic": "Accounting", "question": "截至 2020 年 12 月 31 日止年度，順記（銷貨 $8,800k、銷貨成本 $2,400k、營業費用 $2,800k）與錦記（銷貨 $15,000k、銷貨成本 $2,600k、營業費用 $9,800k）的資料比較，下列哪項陳述是正確的？", options: ["錦記的毛利較低。", "錦記的運用資金報酬率較高。", "錦記在控制營業費用的表現較佳。", "錦記的淨利率較低。"], answer: 3, explanation: "順記淨利率 = 3600/8800 = 40.9%；錦記淨利率 = 2600/15000 = 17.3%。故錦記淨利率較低 (D對)。" },
+            { id: 202123, year: "2021", "topic": "Finance", "question": "下列哪項有關債券的陳述是正確的？\n(1) 承擔風險能力較低的投資者通常偏向投資債券多於股票。\n(2) 如市場利率上升，債券持有人會收取較高利息。\n(3) 債券持有人可於到期日取回本金。", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 1, explanation: "債券風險通常低於股票 (1對)。債券票面息率固定，不隨市場利率上升而增加 (市場利率升會導致債價跌) (2錯)。到期取回本金 (3對)。" },
+            { id: 202124, year: "2021", "topic": "Business Environment", "question": "下列哪項是全球一體化對香港的好處？\n(1) 較易從海外招聘專家 (2) 較便宜的原料供應 (3) 減少企業之間的競爭", options: ["只有 (1)", "只有 (2)", "只有 (3)", "只有 (1) 及 (2)"], answer: 3, explanation: "全球化促進人才流動 (1) 和採購 (2)。但通常會加劇而非減少競爭 (3錯)。" },
+            { id: 202125, year: "2021", "topic": "Management", "question": "一家工廠的生產經理決定在 2021 年底前生產 1,000 件貨品。他已安排生產日程，並調配所需資源及人手。在計劃過程中，下一個步驟是甚麼？", options: ["評估可行方案", "制訂行動方案", "執行行動方案", "設定目標"], answer: 2, explanation: "既然已決定目標並安排好資源/方案 (Organizing/Planning done)，下一步就是「執行」(Implementation)。" },
+            { id: 202126, year: "2021", "topic": "Accounting", "question": "下列哪項複式記帳是正確的？\n(1) 以支票向銀光公司購買一輛汽車：借「汽車」、貸「銀光公司」\n(2) 從梁先生取得佣金支票：借「銀行存款」、貸「佣金收益」\n(3) 東主以其個人支票支付商號的租金費用：借「租金費用」、貸「資本」", options: ["只有 (1)", "只有 (2)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 2, explanation: "(1) 支票付款應貸記「銀行存款」而非供應商。(2) 及 (3) 正確。" },
+            { id: 202127, year: "2021", "topic": "Finance", "question": "彭力剛剛退休。他欲以公積金作投資，賺取穩定的收益。下列哪項投資工具最適合他？", options: ["恆生指數成分股", "在 GEM 上市的股票", "定期存款", "儲蓄存款"], answer: 2, explanation: "退休人士首重本金安全及穩定收益。定期存款 (C) 符合低風險及穩定利息。股票 (A, B) 風險較高，儲蓄存款 (D) 回報過低。" },
+            { id: 202128, year: "2021", "topic": "Management", "question": "一家內地凍肉食品公司擬在香港開設分店。下列哪項是公司資訊管理經理可給予市場營銷經理的支援？\n(1) 處理有關香港凍肉食品市場的數據\n(2) 蒐集冷藏系統供應商的資料\n(3) 建立銷售人員的薪酬制度", options: ["只有 (1)", "只有 (1) 及 (2)", "只有 (1) 及 (3)", "(1)、(2) 及 (3)"], answer: 0, explanation: "資訊經理負責處理數據與系統 (1)。冷藏系統是採購或營運部，薪酬是人力資源部。" },
+            { id: 202129, year: "2021", "topic": "Accounting", "question": "下列哪項是實帳戶的例子？", options: ["購貨帳", "應收貨款帳", "銷貨折扣帳", "電費帳"], answer: 1, explanation: "實帳戶 (Real Account) 涉及資產。應收貨款 (Asset) 是實帳戶。其他均為虛帳戶 (Nominal Accounts)。" },
+            { id: 202130, year: "2021", "topic": "Finance", "question": "假如某投資項目的利息每半年以複息計算，下列哪項有關該項目名義回報率與實際回報率的陳述是正確的？\n(1) 該項目的實際回報率較其名義回報率高。\n(2) 如該項目的利息改為每季以複息計算，實際回報率會更高。\n(3) 如投資金額降低，該項目的實際回報率亦會降低。", options: ["只有 (1) 及 (2)", "只有 (1) 及 (3)", "只有 (2) 及 (3)", "(1)、(2) 及 (3)"], answer: 0, explanation: "複息頻率多於一年一次，EAR > APR (1對)。頻率越高 (每季 > 每半年)，EAR 越高 (2對)。回報率與投資本金金額無關 (3錯)。" }
         ];
 
         // 這是全域變數，會混合本地題目 + 雲端題目
@@ -599,6 +647,7 @@
                 this.selectedYear = null;
                 this.mistakes = JSON.parse(localStorage.getItem('bafs_mistakes')) || [];
                 this.stats = JSON.parse(localStorage.getItem('bafs_stats')) || { total: 0, correct: 0 };
+                this.currentEditingId = null; // null = add mode, string = edit mode ID
                 
                 this.init();
             }
@@ -635,6 +684,7 @@
                     window.BAFS_DB = [...REAL_QUESTIONS, ...CLOUD_QUESTIONS_CACHE];
                     
                     this.renderYears();
+                    this.renderAdminQuestionList(); // Update admin list
                 } catch (e) {
                     console.error("Failed to load cloud questions:", e);
                 }
@@ -785,6 +835,10 @@
                 const total = this.currentQuestions.length;
                 
                 document.getElementById('q-number').innerText = `${this.currentIndex + 1}/${total}`;
+                // Set the question source badge text (e.g., 2021 Q1)
+                const qSourceText = q.id ? `${q.year} Q${String(q.id).slice(-2).replace(/^0+/, '')}` : `${q.year}`;
+                document.getElementById('q-source').innerText = qSourceText;
+                
                 document.getElementById('q-text').innerText = q.question;
                 
                 const pct = ((this.currentIndex) / total) * 100;
@@ -924,18 +978,10 @@
                     this.fireConfetti();
                 }
 
-                // 自動上傳分數 (Auto Upload) - 改為 true (自動模式)
-                // 增加延遲與登入檢查，確保上傳成功
-                setTimeout(() => {
-                    if (user) {
-                        this.saveToLeaderboard(true);
-                    } else {
-                        // 如果尚未登入，先嘗試匿名登入後再上傳
-                        signInAnonymously(auth).then(() => {
-                            this.saveToLeaderboard(true);
-                        }).catch(e => console.error("Auto login failed during submit", e));
-                    }
-                }, 500);
+                // 自動上傳分數 (Auto Upload)
+                if (user) {
+                    this.saveToLeaderboard(false);
+                }
             }
 
             fireConfetti() {
