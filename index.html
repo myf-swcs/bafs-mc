@@ -453,19 +453,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const YOUR_FIREBASE_CONFIG = {
-            apiKey: "AIzaSyBt7EdhDqdpNQuh1jo6AmCNO3Vgso-c8pg",
-            authDomain: "bafs-140c4.firebaseapp.com",
-            projectId: "bafs-140c4",
-            storageBucket: "bafs-140c4.firebasestorage.app",
-            messagingSenderId: "859626093746",
-            appId: "1:859626093746:web:8e0ffb9616bce754d0ddab"
-        }; 
 
-// 初始化 Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 // 定義代碼中可能用到的常數 (根據您的代碼片段推測)
 const appId = "bafs-mc-master"; // 或您在 Firestore 中使用的文檔 ID
@@ -1320,6 +1308,7 @@ const appId = "bafs-mc-master"; // 或您在 Firestore 中使用的文檔 ID
     </script>
 </body>
 </html>
+
 
 
 
