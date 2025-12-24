@@ -134,6 +134,12 @@
         .question-text {
             white-space: pre-line;
         }
+		@media (max-width: 768px) {
+			.chatroom-container {
+				height: 80vh !important;
+				min-height: 600px !important;
+			}
+}
     </style>
 </head>
 <body class="bg-yellow-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col">
@@ -240,15 +246,14 @@
     </h3>
     <p class="text-center text-gray-600 dark:text-gray-400 mb-6">問問題 • 分享心得 • 一起衝 5**！</p>
     
-    <!-- 聊天室容器：強制填滿 -->
-    <div class="w-full relative overflow-hidden rounded-xl border-4 border-black dark:border-white shadow-cartoon-hover" style="height: 70vh; min-height: 500px; background: #f8f8f8 dark:#2d2d2d;">
+    <!-- 聊天室容器：強制裁切 header + 填滿 -->
+    <div class="w-full relative overflow-hidden rounded-xl border-4 border-black dark:border-white shadow-cartoon-hover" style="height: 70vh; min-height: 500px;">
         <iframe
             src="https://tlk.io/bafs?embed=1"
-            class="absolute inset-0 w-full h-full border-0"
+            class="absolute top-[-50px] left-0 w-full h-[calc(100%+100px)] border-0"
             frameborder="0"
             allowfullscreen
-            loading="lazy"
-            style="transform: scale(1.04); transform-origin: top left; width: 100%; height: 104%; background: transparent;">
+            loading="lazy">
         </iframe>
     </div>
     
@@ -256,6 +261,7 @@
         <i class="fa-solid fa-heart text-brand-red mr-1"></i>
         大家保持友善，共同進步～
     </p>
+</div>
 </div>
 </div>       
 
