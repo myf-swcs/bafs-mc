@@ -180,7 +180,7 @@
             <div class="cartoon-card bg-brand-blue text-white p-6 md:p-10 text-center relative overflow-hidden">
                 <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full"></div>
                 <div class="absolute top-20 -left-10 w-20 h-20 bg-brand-yellow/30 rounded-full"></div>
-                <h2 class="text-3xl md:text-5xl font-bold mb-4 cartoon-font drop-shadow-[3px_3px_0_rgba(0,0,0,1)]">BAFS 5** 生成器</h2>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 cartoon-font drop-shadow-[3px_3px_0_rgba(0,0,0,1)]">文sir小教室<h2>
                 <p class="text-lg md:text-xl font-medium mb-6">歷屆試題 • 即時詳解 • 錯題重溫 • 龍虎榜</p>
                 <div class="flex flex-wrap justify-center gap-4">
                     <button onclick="app.startRandomMock()" class="cartoon-btn bg-brand-yellow text-black px-6 py-3 rounded-xl text-lg hover:bg-yellow-300">
@@ -924,10 +924,18 @@
                     this.fireConfetti();
                 }
 
-                // 自動上傳分數 (Auto Upload)
-                if (user) {
-                    this.saveToLeaderboard(false);
-                }
+                // 自動上傳分數 (Auto Upload) - 改為 true (自動模式)
+                // 增加延遲與登入檢查，確保上傳成功
+                setTimeout(() => {
+                    if (user) {
+                        this.saveToLeaderboard(true);
+                    } else {
+                        // 如果尚未登入，先嘗試匿名登入後再上傳
+                        signInAnonymously(auth).then(() => {
+                            this.saveToLeaderboard(true);
+                        }).catch(e => console.error("Auto login failed during submit", e));
+                    }
+                }, 500);
             }
 
             fireConfetti() {
@@ -1017,7 +1025,9 @@
                 
                 let nickname;
                 if (isAuto) {
+                    // 自動模式：直接產生暱稱，不詢問
                     nickname = "訪客 " + user.uid.substring(0, 5);
+                    this.showToast("正在自動上傳成績...");
                 } else {
                     nickname = prompt("請輸入你在龍虎榜上的暱稱：", "訪客 " + user.uid.substring(0, 5));
                 }
@@ -1038,6 +1048,7 @@
                     
                     if (isAuto) {
                         document.getElementById('auto-upload-msg').classList.remove('hidden');
+                        this.showToast("✅ 成績已自動上傳至龍虎榜！");
                     } else {
                         this.showToast("上傳成功！");
                         setTimeout(() => this.router('leaderboard'), 1000);
