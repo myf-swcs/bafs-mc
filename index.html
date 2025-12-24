@@ -152,16 +152,16 @@
             </button>
             
             <!-- Auth Status (Anonymous) -->
-            <div id="user-display" class="hidden flex items-center gap-2 text-sm font-bold border-2 border-black dark:border-white px-3 py-1 rounded-full bg-brand-green text-white shadow-cartoon-sm">
-                <i class="fa-solid fa-user-secret"></i> <span id="username-span">訪客</span>
-            </div>
-
-            <!-- Mobile Menu Button -->
-            <button class="md:hidden cartoon-btn bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-lg" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-    </nav>
+<!-- 用戶名稱顯示 + 更改名字 -->
+<div id="user-display" class="flex items-center gap-3">
+    <div class="flex items-center gap-2 text-sm font-bold border-2 border-black dark:border-white px-4 py-2 rounded-full bg-brand-green text-white shadow-cartoon-sm">
+        <i class="fa-solid fa-user"></i> 
+        <span id="username-span">載入中...</span>
+    </div>
+    <button onclick="changeName()" class="text-sm cartoon-btn bg-brand-yellow px-4 py-2 rounded-lg font-bold hover:bg-yellow-400">
+        更改名字
+    </button>
+</div>    </nav>
 
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-40 bg-black/90 flex flex-col items-center justify-center space-y-6 text-white text-2xl font-bold cartoon-font">
@@ -1129,6 +1129,13 @@
                 document.getElementById('result-correct').innerText = correctCount;
                 document.getElementById('result-wrong').innerText = total - correctCount;
 
+// 自動上傳到龍虎榜（使用 playerName）
+if (playerName && playerName !== "訪客") {
+    // 如果你有 Firebase 龍虎榜，直接用 playerName
+    // 或者如果你用 localStorage 的龍虎榜，也可以用 playerName
+    console.log("上傳成績：", playerName, this.score + "/" + total);
+    // 這裡如果你有 saveToLeaderboard 函數，可傳 playerName
+}
                 this.router('result');
                 
                 if (correctCount / total > 0.5) {
@@ -1328,10 +1335,45 @@
             }
         }
 
+
         window.app = new BAFSApp();
         window.router = (view) => app.router(view);
 
     </script>
+<script>
+// === 用戶名稱系統（顯示 + 更改 + 永久記住）===
+let playerName = "訪客";
+
+// 頁面載入時自動讀取名字
+function loadPlayerName() {
+    const urlParams = new URLSearchParams(window.location.search);
+    playerName = urlParams.get('name') || localStorage.getItem('bafsPlayerName') || "訪客";
+    
+    const span = document.getElementById('username-span');
+    if (span) {
+        span.innerText = playerName;
+    }
+}
+
+// 更改名字函數
+function changeName() {
+    const newName = prompt("請輸入你要顯示的名字（會用來上龍虎榜）：", playerName);
+    if (newName && newName.trim() !== "") {
+        playerName = newName.trim();
+        localStorage.setItem('bafsPlayerName', playerName);
+        document.getElementById('username-span').innerText = playerName;
+        
+        const url = new URL(window.location);
+        url.searchParams.set('name', playerName);
+        window.history.replaceState({}, '', url);
+        
+        alert(`名字已成功更改為：${playerName} 🎉`);
+    }
+}
+
+// 頁面載入完成後執行
+document.addEventListener('DOMContentLoaded', loadPlayerName);
+</script>
 </body>
 </html>
 
